@@ -1,0 +1,16 @@
+{% extends "root.html" %}
+
+{% block content %}
+<h1>LOGIN</h1>
+<form method = 'POST'>
+    {% csrf_token %}
+    <p><input placeholder = 'Username' name = 'username'/></p>
+    <p><input type = 'password' placeholder = 'Password' name = 'password'/></p>
+    <p><input type = 'submit' value = 'Login'/></p>
+</form>
+{% for message in messages %}
+    <p id = 'messages'>{{message}}</p>
+{% endfor %}
+<p>Don't have an account?</p> <a href = {% url "registration_page" %}>Sign Up</a>
+{% endblock content %}
+

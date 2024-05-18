@@ -1,0 +1,49 @@
+{% extends "root.html" %}
+
+{% block content %}
+<h1>Current Creators:</h1>
+<h4>Click to Subscribe</h4>
+<form method = 'post'>
+    {% csrf_token %}
+{% for youtuber in youTubers %}
+    {% if request.user != youtuber %}{% endif %}
+    <div><p><input type = 'submit' name ='subscribe_username' value = '{{youtuber.username}}'/></p></div>
+{% endfor %}
+</form>
+
+<h1>Already Subscribed To: </h1>
+<h4>Click to Unsubscribe</h4>
+<form method = 'post'>
+    {% csrf_token %}
+{% for subscription in already_subscribed %}
+    <input type = 'submit' name = 'unsubscribe_username' value = '{{subscription.username}}'/>
+    {% comment %} <a href = {% url "unsubscribe" %}>Unsubscribe</a> {% endcomment %}
+{% endfor %}
+</form>
+
+{% if role == 'Admin' %}
+<form method = 'post'>
+    {% csrf_token %}
+    <h1>Current Subscribers:</h1>
+    <h4>Click to Block</h4>
+    {% for subscriber in subscribers %}
+        <p><input type = 'submit' name = 'block' value = '{{subscriber.subscriber.username}}'/></p>
+    {% endfor %}
+
+</form>
+
+    {% if blocked_users %}
+    <h1>Blocked Users</h1>
+    <form method = 'post'>
+        {% csrf_token %}
+        {% for user in blocked_users %}
+            <p><input type = 'submit' name = 'unblock' value = '{{user.subscriber.username}}'/></p>
+        {% endfor %}
+    </form>
+    {% endif %}
+{% endif %}
+
+{% endblock content %}
+
+
+

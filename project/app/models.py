@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from datetime import datetime
 
 # Create your models here.
 
@@ -33,7 +34,7 @@ class Posts(models.Model):
     title = models.CharField(max_length=200, default='required')
     content_creator = models.ForeignKey(YouTuber, on_delete=models.CASCADE)
     post = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField()
 
     def __str__(self):
         return self.title
@@ -42,50 +43,51 @@ class Posts(models.Model):
 #     name = models.CharField(max_length=25)
     
 class Subscription(models.Model):
+    subscriber = models.ForeignKey(User, on_delete = models.CASCADE, related_name='subscriptions')
+    subscribed_to = models.ForeignKey(YouTuber, on_delete = models.CASCADE)
+
+    def __str__(self):
+        return self.subscribed_to.creator.username
+
+
+class Blocked_Subscriber(models.Model):
     subscriber = models.ForeignKey(User, on_delete = models.CASCADE)
     subscribed_to = models.ForeignKey(YouTuber, on_delete = models.CASCADE)
 
-# class Blocked_Subscriber(models.Model):
-    #Fields: ID, blocker (foreign key to VTuber), blocked_user (foreign key to User), date_blocked, etc.
-    # subscriber = models.ForeignKey(User, on_delete = models.CASCADE)
-    # subscribed_to = models.ForeignKey(YouTuber, on_delete = models.CASCADE)
-
 
 ############################Creation Models########################
-def create_YouTuber(name, subscribers):
-    pass
 
-
-def create_posts(author, title, creator, post):
-    #dynamic input fields w/ plus mark
-    #on submit collect all tags and pass them to create_posts as a list
-    Posts.objects.create(author = author
-                         ,title = title
-                                ,content_creator = creator
-                                ,post = post
-                                )
+def create_posts(author, title, creator, post, created_at=None):
+    if created_at is None:
+        created_at = datetime.now()
+    Posts.objects.create(
+        author=author,
+        title=title,
+        content_creator=creator,
+        post=post,
+        created_at=created_at
+    )
     
 def create_userprofile(user, role):
     UserProfile.objects.create(user=user, role=role)
 
 def create_YouTuber(user, subscribers = None):
-    user = YouTuber.objects.create(user=user)
+    return YouTuber.objects.create(user=user)
 
-    if subscribers:
-        for subscriber in subscribers:
-            user.subscribers.add(subscriber)
 
-    return user
+def create_blocked_user(user, subscribed_to):
+    return Blocked_Subscriber.objects.get_or_create(subscriber = user
+                                             , subscribed_to = subscribed_to)
 
 def create_role(role):
     return Role.objects.get_or_create(name = role)
-# def create_Subscription(subscriber, creator):
-#     return Subscription.objects.create(subscriber = subscriber
-#                                 ,subscribed_to = creator)
 
-# def create_Blocked_Subscriber(subscriber, creator):
-#     return Blocked_Subscriber.objects.create(subscriber = subscriber
-#                                              ,subscribed_to = creator)
+def create_Subscription(subscriber, creator):
+    youTuber, created = Subscription.objects.get_or_create(subscriber = subscriber
+                                ,subscribed_to = creator)
+    
+    return youTuber
+
 
 ############################Read Models########################
 def view_all_posts(user):
@@ -98,6 +100,32 @@ def view_role(user):
     except:
         pass
 
+def view_all_youTubers():
+    return YouTuber.objects.all()
+
+def view_latest_post(user, subscribed_to):
+    try:
+        list = Posts.objects.filter(author = user
+                             ,content_creator = subscribed_to)
+    except:
+        pass
+
+def view_single_blog_by_title(author, title, creator):
+    try: 
+        Posts.objects.get(author = author,
+                          title = title,
+                          content_creator = creator,
+                          )
+    except:
+        pass
+
+def view_single_blog_reverse_lookup(author, title, creator):
+        return Posts.objects.get(author = author
+                        ,title = title 
+                        ,content_creator = creator)
+
+def view_all_blocked(user):
+    return Blocked_Subscriber.objects.filter(subscriber = user)
 
 ############################Update Models########################
 def update_certain_post(title, new_title, new_content, creator):
@@ -116,6 +144,11 @@ def update_certain_post(title, new_title, new_content, creator):
 def delete_post(title, user):
     Posts.objects.get(title = title, author = user).delete()
 
+def delete_subscription(user, subscribed_to):
+    Subscription.objects.get(subscriber = user, subscribed_to = subscribed_to).delete()
+
+def delete_or_unblock_blocked_user(user, youtuber):
+    Blocked_Subscriber.objects.get(subscriber = user, subscribed_to = youtuber).delete()
 ############################Filter Models########################
 def filter_by_title(title, user):
     Posts.objects.get(title =title, user = user)
@@ -123,3 +156,27 @@ def filter_by_title(title, user):
 def view_all_posts_associated(creator):
     return Posts.objects.filter(content_creator = creator)
         
+def filter_all_subscriptions(user):
+    return Subscription.objects.filter(subscriber = user)
+
+def find_all_subscribers(creator):
+    try:
+        creator = YouTuber.objects.get(creator = creator)
+        return Subscription.objects.filter(subscribed_to = creator)
+    except:
+        return []
+    
+def filter_all_posts(user, creator):
+    return Posts.objects.filter(author = user, content_creator = creator)
+
+def filter_latest_post(user, creator):
+    try:
+        return filter_all_posts(user, creator).latest('created_at')
+    except:
+        pass
+
+def filter_blocked_users(user):
+    try:
+        return Blocked_Subscriber.objects.filter(subscribed_to = user)
+    except:
+        return []

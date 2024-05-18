@@ -10,13 +10,21 @@
 
 <h1><a href = {% url "view_my_blogs" %}>View All Blogs</a></h1>
 
+<h1><a href = {% url 'subscribe' %}>Subscribe To New Creator</a></h1>
+
 {% if role.name == 'Admin' %}
-        <h1>Subscribers Blogs:</h1>
+    <form method = 'POST'>
+        <h1>Latest Blogs:</h1>
         {% for blog in blogs %}
-            <p>{{blog.title}}</p>
-            <p>{{blog.user.username}}</p>
-            <p>{{blog.post}}</p>
+        {% if blog.author.username != request.user.username %}
+        <p>{{blog.title}}</p>
+        <p>{{blog.author.username}}</p>
+        <p>{{blog.post}}</p>
+        <p><a href = {% url "delete" blog.title%}>Delete</a></p>
+        <p><input type = 'submit' value = '{{blog.author.username}}'>Block this user?</input></p>
+        {% endif %}
         {% endfor %}
+    </form>
 {% endif %}
 
 

@@ -29,15 +29,21 @@ class Create_User_Form(UserCreationForm):
     
 
 class Create_Blog_Post_Form(forms.ModelForm):
-    title = forms.CharField(required = True)
+    title = forms.CharField(required=True)
+
     class Meta:
         model = Posts
-        # fields = ['user', 'creator', 'post', 'tags']
-        # fields = ['title', 'content_creator', 'post']
-        fields = ['title','content_creator', 'post']
+        fields = ['title', 'content_creator', 'post']
 
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(Create_Blog_Post_Form, self).__init__(*args, **kwargs)
+        if user:
+            subscriptions = Subscription.objects.filter(subscriber=user)
+            youtubers = user.subscriptions.all()
+            self.fields['content_creator'].queryset = youtubers
 
 class Update_Blog_Post_Form(forms.ModelForm):
     class Meta:
         model = Posts
-        fields = ['title', 'post']
+        fields = ['title', 'content_creator', 'post']

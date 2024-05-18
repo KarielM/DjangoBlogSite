@@ -60,10 +60,14 @@ def User_Logout_View(request:HttpRequest):
 
 @login_required(login_url='user_login')
 def Dashboard_View(request:HttpRequest):
-    role = view_role(request.user)
-    if role is not None:
-        return render(request, 'dashboard.html', {'role':role})
-    else:
+    try:
+        user = YouTuber.objects.get(creator = request.user)
+        role = view_role(request.user)
+        if role.name == 'Admin':
+            blogs = view_all_posts_associated(user)
+            ##pull all the subscribers
+            return render(request, 'dashboard.html', {'role':role, 'blogs':blogs})
+    except YouTuber.DoesNotExist:
         return render(request, 'dashboard.html')
 
 

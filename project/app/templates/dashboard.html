@@ -11,7 +11,12 @@
 <h1><a href = {% url "view_my_blogs" %}>View All Blogs</a></h1>
 
 {% if role.name == 'Admin' %}
-        <h1>Hi</h1>
+        <h1>Subscribers Blogs:</h1>
+        {% for blog in blogs %}
+            <p>{{blog.title}}</p>
+            <p>{{blog.user.username}}</p>
+            <p>{{blog.post}}</p>
+        {% endfor %}
 {% endif %}
 
 

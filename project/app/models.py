@@ -41,9 +41,9 @@ class Posts(models.Model):
 # class Tag(models.Model):
 #     name = models.CharField(max_length=25)
     
-# class Subscription(models.Model):
-#     subscriber = models.ForeignKey(User, on_delete = models.CASCADE)
-#     subscribed_to = models.ForeignKey(YouTuber, on_delete = models.CASCADE)
+class Subscription(models.Model):
+    subscriber = models.ForeignKey(User, on_delete = models.CASCADE)
+    subscribed_to = models.ForeignKey(YouTuber, on_delete = models.CASCADE)
 
 # class Blocked_Subscriber(models.Model):
     #Fields: ID, blocker (foreign key to VTuber), blocked_user (foreign key to User), date_blocked, etc.
@@ -120,3 +120,6 @@ def delete_post(title, user):
 def filter_by_title(title, user):
     Posts.objects.get(title =title, user = user)
 
+def view_all_posts_associated(creator):
+    return Posts.objects.filter(content_creator = creator)
+        

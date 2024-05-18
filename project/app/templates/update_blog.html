@@ -1,0 +1,11 @@
+{% extends "root.html" %}
+
+{% block content %}
+<h1>Choose A Post To Update</h1>
+<form method = 'POST'>
+    {% csrf_token %}
+    {{form.as_p}}
+<input type = 'submit'/>
+</form>
+
+{% endblock content %}

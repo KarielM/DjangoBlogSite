@@ -3,6 +3,17 @@
 {% block content %}
 <h1>Dashboard</h1>
 <p>Hello, {{request.user}}</p>
-<span><a href = {% url "user_login" %}>Logout</a></span>
+<p>{{request.user.role}}</p>
+<span><a href = {% url "logout" %}>Logout</a></span>
+
+<h1><a href = {% url "create_blog_post" %}>Create Post</a></h1>
+
+<h1><a href = {% url "view_my_blogs" %}>View All Blogs</a></h1>
+
+{% if role.name == 'Admin' %}
+        <h1>Hi</h1>
+{% endif %}
+
+
 {% endblock content %}
 

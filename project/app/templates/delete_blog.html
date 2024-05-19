@@ -1,6 +1,6 @@
-{% extends "root.html" %}
+{% extends "dashboard.html" %}
 
-{% block content %}
+{% block title %}
 <h1> Are you sure you want to delete the post "{{ title }}"?</h1>
 <form method = 'POST'>
 {% csrf_token %}
@@ -8,4 +8,4 @@
     <a href="{% url 'dashboard' %}">Cancel</a>
 </form>
 
-{% endblock content %}
+{% endblock title %}

@@ -1,6 +1,6 @@
-{% extends "root.html" %}
+{% extends "dashboard.html" %}
 
-{% block content %}
+{% block title %}
 <h1>Choose A Post To Update</h1>
 <form method = 'POST'>
     {% csrf_token %}
@@ -8,4 +8,4 @@
 <input type = 'submit'/>
 </form>
 
-{% endblock content %}
+{% endblock title %}

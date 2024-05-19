@@ -1,11 +1,11 @@
 {% extends "root.html" %}
 
 {% block content %}
-<header>
+<div class = 'sidenav'>
     Hello, {{request.user}}
     <span><a href = {% url "logout" %}>Logout</a></span>
     <span><a href = {% url "dashboard" %}>Home</a></span>
-</header>
+</div>
 {% block title %}
 <h1>Dashboard</h1>
 

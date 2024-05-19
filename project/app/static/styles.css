@@ -2,3 +2,20 @@
     margin: 0;
     padding: 0;
 }
+
+.sidenav {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    /* left: 0; */
+    background-color: #e2b2b2;
+    overflow-x: hidden;
+    padding-top: 60px;
+    transition: 0.5s;
+}
+
+html {
+    background-color: rgb(220, 220, 228);
+}

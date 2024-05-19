@@ -82,9 +82,9 @@ def Dashboard_View(request:HttpRequest):
 
 @login_required(login_url='user_login')
 def create_blog_post_view(request):
-    form = Create_Blog_Post_Form()
+    form = Create_Blog_Post_Form(user = request.user)
     # subscribed_youtubers = YouTuber.objects.filter(subscriptions__subscriber=request.user)
-    subscribed_youtubers = request.user.subscriptions.all()
+    # subscribed_youtubers = request.user.subscriptions.all()
     # print(subscribed_youtubers)
 
     # print(request.user)
@@ -95,22 +95,27 @@ def create_blog_post_view(request):
     # print(isinstance(request.user, user2))
 
     if request.method == 'POST':
+        # print(request.POST)
         form = Create_Blog_Post_Form(request.POST, user = request.user)
         if form.is_valid():
+            print(form.cleaned_data)
             # form.save()
 
             author = request.user
             title = form.cleaned_data['title']
             content_creator_username = form.cleaned_data['content_creator']
-            content_creator = YouTuber.objects.get(creator__username=content_creator_username)
+            # content_creator = YouTuber.objects.get(creator__username=content_creator_username.subscribed_to)
+            # print(f'HELLO HELLO HELLO {content_creator}')
             post = form.cleaned_data['post']  
+            print(content_creator_username)
 
-            # create_posts(author, content_creator, post, title) 
-            create_posts(author, title, content_creator, post)
+            create_posts(author, title, content_creator_username, post)
             messages.success(request, 'Post successfully created')         
 
             # create_posts(form.cleaned_data)
             return redirect('dashboard')
+        else:
+            print(form.errors)
 
     return render(request, 'create_post.html', {'form': form})
 

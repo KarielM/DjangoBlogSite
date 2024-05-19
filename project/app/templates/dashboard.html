@@ -1,18 +1,22 @@
 {% extends "root.html" %}
 
 {% block content %}
+<header>
+    Hello, {{request.user}}
+    <span><a href = {% url "logout" %}>Logout</a></span>
+    <span><a href = {% url "dashboard" %}>Home</a></span>
+</header>
+{% block title %}
 <h1>Dashboard</h1>
-<p>Hello, {{request.user}}</p>
-<p>{{request.user.role}}</p>
-<span><a href = {% url "logout" %}>Logout</a></span>
 
-<h1><a href = {% url "create_blog_post" %}>Create Post</a></h1>
+<h1><a href = {% url "create_blog_post" %}>Create Blog Post</a></h1>
 
-<h1><a href = {% url "view_my_blogs" %}>View All Blogs</a></h1>
+<h1><a href = {% url "view_my_blogs" %}>Manage Blog Posts</a></h1>
 
-<h1><a href = {% url 'subscribe' %}>Subscribe To New Creator</a></h1>
+<h1><a href = {% url 'subscribe' %}>Manage Subscriptions</a></h1>
 
 {% if role.name == 'Admin' %}
+    {% if blogs %}
     <form method = 'POST'>
         <h1>Latest Blogs:</h1>
         {% for blog in blogs %}
@@ -21,12 +25,11 @@
         <p>{{blog.author.username}}</p>
         <p>{{blog.post}}</p>
         <p><a href = {% url "delete" blog.title%}>Delete</a></p>
-        <p><input type = 'submit' value = '{{blog.author.username}}'>Block this user?</input></p>
         {% endif %}
         {% endfor %}
     </form>
+    {% endif %}
 {% endif %}
-
-
+{% endblock title %}
 {% endblock content %}
 

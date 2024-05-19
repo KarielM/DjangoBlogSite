@@ -22,6 +22,7 @@
 </form>
 
 {% if role == 'Admin' %}
+{% if subscribers %}
 <form method = 'post'>
     {% csrf_token %}
     <h1>Current Subscribers:</h1>
@@ -29,8 +30,9 @@
     {% for subscriber in subscribers %}
         <p><input type = 'submit' name = 'block' value = '{{subscriber.subscriber.username}}'/></p>
     {% endfor %}
-
 </form>
+{% endif %}
+
 
     {% if blocked_users %}
     <h1>Blocked Users</h1>

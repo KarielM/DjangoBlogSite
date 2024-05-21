@@ -2,27 +2,31 @@
 
 {% block title %}
 <div>
-    <h1>{{request.user.username}} Blogs:</h1>
-    <hr>
     {% for post in posts %}
-        <div>
+        <div class = 'blog'>
         {% now "Y" as current_year %}
-        <h3>{{post.title}}</h3>
-        {% if post.created_at|date:"Y" == current_year %}
+        <h2>{{post.title}}</h2>
+
+        <p>{{post.post}}</p>
+        <hr>
+        <div>
+            {% if post.created_at|date:"Y" == current_year %}
             <p>{{ post.created_at|date:"M d" }}</p>
         {% else %}
             <p>{{ post.created_at|date:"M d, Y" }}</p>
         {% endif %}
-        
-        <p>{{post.content_creator}}</p>
-        <p>{{post.post}}</p>
-        <a href = {% url "update" post.title%}>Update</a>
-        <a href = {% url "delete" post.title%}>Delete</a>
+        <p class = 'edit'>
+            <a href = {% url "update" post.title%}>Update</a>
+            <a href = {% url "delete" post.title%}>Delete</a>
+            <p>
         </div>
+        </div>
+    </div>
     {% endfor %}
     
-    <form method = "POST">
-        {% csrf_token %}
+        {% if Subscribers %}
+        <form method = "POST">
+            {% csrf_token %}
         <h1>Subscribers' Posts</h1>
         <hr>
     {% for post in users_posts %}
@@ -42,6 +46,8 @@
         </div>
     {% endif %}
     {% endfor %}
+        {% endif %}
+ 
     </form>
 {% endblock title %}
 

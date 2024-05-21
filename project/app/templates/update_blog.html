@@ -2,10 +2,16 @@
 
 {% block title %}
 <h1>Choose A Post To Update</h1>
+<div class = 'form-container'>
 <form method = 'POST'>
     {% csrf_token %}
-    {{form.as_p}}
-<input type = 'submit'/>
+    <p>{{form.title}}</p>
+    <p>{{form.content_creator}}</p>
+    <p>{{form.post}}</p>
+    {% comment %} {{form.as_p}} {% endcomment %}
+<button type = 'submit'class="action-button"/>Submit</button>
 </form>
-
+<button class="action-button" type="button" onclick="window.location.href='{% url 'dashboard' %}'">Cancel</button>
+</div>
+{{form.errors}}
 {% endblock title %}

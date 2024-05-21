@@ -1,35 +1,43 @@
 {% extends "root.html" %}
 
 {% block content %}
-<div class = 'sidenav'>
-    Hello, {{request.user}}
-    <span><a href = {% url "logout" %}>Logout</a></span>
-    <span><a href = {% url "dashboard" %}>Home</a></span>
+<div class="sidenav">
+    <h1>Hello, {{ request.user }}</h1>
+    <span><a href="{% url 'logout' %}">Logout</a></span>
+    <span><a href="{% url 'dashboard' %}">Home</a></span>
 </div>
+<div class="main">
 {% block title %}
-<h1>Dashboard</h1>
+<div class="centered">
+    <h1>Dashboard</h1>
 
-<h1><a href = {% url "create_blog_post" %}>Create Blog Post</a></h1>
+    <h1><a class="action-button" href="{% url 'create_blog_post' %}">Create Blog Post</a></h1>
 
-<h1><a href = {% url "view_my_blogs" %}>Manage Blog Posts</a></h1>
+    <h1><a class="action-button" href="{% url 'view_my_blogs' %}">Manage Blog Posts</a></h1>
 
-<h1><a href = {% url 'subscribe' %}>Manage Subscriptions</a></h1>
+    <h1><a class="action-button" href="{% url 'subscribe' %}">Manage Subscriptions</a></h1>
 
-{% if role.name == 'Admin' %}
-    {% if blogs %}
-    <form method = 'POST'>
-        <h1>Latest Blogs:</h1>
-        {% for blog in blogs %}
-        {% if blog.author.username != request.user.username %}
-        <p>{{blog.title}}</p>
-        <p>{{blog.author.username}}</p>
-        <p>{{blog.post}}</p>
-        <p><a href = {% url "delete" blog.title%}>Delete</a></p>
+    {% if role.name == 'Admin' %}
+        {% if blogs %}
+        <div class="full-width-container">
+            <h1>Latest Blogs:</h1>
+            <form method="post" class="form-content">
+                {% csrf_token %}
+                {% for blog in blogs %}
+                    {% if blog.author.username != request.user.username %}
+                        <div class="blog">
+                            <h3>{{ blog.title }}</h3>
+                            <p>{{ blog.author.username }}</p>
+                            <p>{{ blog.post }}</p>
+                            <a class="action-button" href="{% url 'delete' blog.title %}">Delete</a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </form>
+        </div>
         {% endif %}
-        {% endfor %}
-    </form>
     {% endif %}
-{% endif %}
+</div>
 {% endblock title %}
+</div>
 {% endblock content %}
-

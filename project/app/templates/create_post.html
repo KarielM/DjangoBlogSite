@@ -1,9 +1,27 @@
 {% extends "dashboard.html" %}
 
 {% block title %}
-    <form method = 'POST'>
+<div class="form-container">
+    <h1>Create New Blog Post</h1>
+    <form method="POST">
         {% csrf_token %}
-        {{form.as_p}}
-        <input type = 'submit'/>
+        <div class="form-content">
+            <p>{{ form.title }}</p>
+            {% comment %} <p>{{ form.content_creator }}</p> {% endcomment %}
+            <p>{{ form.post }}</p>
+            {% comment %} {{ form.as_p }} {% endcomment %}
+            <button type="submit" class="action-button">Submit</button>
+            <button type="button" class="action-button" onclick="window.location.href='{% url 'dashboard' %}'">Cancel</button>
+        </div>
     </form>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let titleField = document.getElementsByName('title')[0];
+        let postField = document.getElementsByName('post')[0];
+
+        titleField.placeholder = 'Title..';
+        postField.placeholder = 'Write your blog post here..';
+    });
+</script>
 {% endblock title %}

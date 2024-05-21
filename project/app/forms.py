@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from .models import *
 
 class Create_User_Form(UserCreationForm):
-    is_youTuber = forms.BooleanField(label = 'Are you a YouTuber?')
+    is_youTuber = forms.BooleanField(label = 'Are you a YouTuber?', required=False)
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
@@ -19,9 +19,9 @@ class Create_User_Form(UserCreationForm):
 
             if is_youTuber:
                 YouTuber.objects.create(creator=user)
-                role, created = Role.objects.get_or_create('Admin')
+                role, created = Role.objects.get_or_create(name = 'Admin')
             else:
-                role, created = Role.objects.get_or_create('Regular')
+                role, created = Role.objects.get_or_create(name = 'Regular')
 
             UserProfile.objects.create(user=user, role=role)
 

@@ -1,16 +1,39 @@
 {% extends "root.html" %}
 
 {% block content %}
-<h1>LOGIN</h1>
-<form method = 'POST'>
-    {% csrf_token %}
-    <p><input placeholder = 'Username' name = 'username'/></p>
-    <p><input type = 'password' placeholder = 'Password' name = 'password'/></p>
-    <p><input type = 'submit' value = 'Login'/></p>
-</form>
-{% for message in messages %}
-    <p id = 'messages'>{{message}}</p>
-{% endfor %}
-<p>Don't have an account?</p> <a href = {% url "registration_page" %}>Sign Up</a>
+<div class="d-flex justify-content-center h-100">
+  <div class="user_card form-container">
+    <div class="d-flex justify-content-center">
+      <h3 id="form-title">LOGIN</h3>
+    </div>
+    <div class="d-flex justify-content-center form_container">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-user"></i></span>
+          </div>
+          <input type="text" name="username" placeholder="Username..." class="form-control">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-key"></i></span>
+          </div>
+          <input type="password" name="password" placeholder="Password..." class="form-control">
+        </div>
+        <div class="input-group mb-3">
+          <input class="btn login_btn action-button" type="submit" value="Login">
+        </div>
+      </form>
+    </div>
+    <div class="d-flex justify-content-center links mt-4">
+      Don't have an account? <a href="{% url 'registration_page' %}">Sign Up</a>
+    </div>
+    {% comment %} <div id="messages" class="form-content">
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    </div> {% endcomment %}
+  </div>
+</div>
 {% endblock content %}
-

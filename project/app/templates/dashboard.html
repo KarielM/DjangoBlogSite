@@ -26,9 +26,14 @@
                 {% for blog in blogs %}
                     {% if blog.author.username != request.user.username %}
                         <div class="blog">
-                            <h3>{{ blog.title }}</h3>
-                            <p>{{ blog.author.username }}</p>
+                            <h3>{{ blog.title }} - {{ blog.author.username }}</h3>
                             <p>{{ blog.post }}</p>
+                            {% now "Y" as current_year %}
+                            {% if post.created_at|date:"Y" == current_year %}
+                                <p>{{ blog.created_at|date:"M d" }}</p>
+                            {% else %}
+                                <p>{{ blog.created_at|date:"M d, Y" }}</p>
+                            {% endif %}
                             {% comment %} <a class="action-button" href="{% url 'delete' blog.title %}">Delete</a> {% endcomment %}
                         </div>
                     {% endif %}

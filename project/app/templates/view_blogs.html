@@ -4,13 +4,13 @@
 <div>
     {% for post in posts %}
         <div class = 'blog'>
-        {% now "Y" as current_year %}
-        <h2>{{post.title}}</h2>
+            {% now "Y" as current_year %}
+            <h2>{{post.title}}</h2>
 
-        <p>{{post.post}}</p>
-        <hr>
+            <p>{{post.post}}</p>
+            <hr>
         <div>
-            {% if post.created_at|date:"Y" == current_year %}
+        {% if post.created_at|date:"Y" == current_year %}
             <p>{{ post.created_at|date:"M d" }}</p>
         {% else %}
             <p>{{ post.created_at|date:"M d, Y" }}</p>
@@ -20,29 +20,27 @@
             <a href = {% url "delete" post.title%}>Delete</a>
             <p>
         </div>
-        </div>
     </div>
-    {% endfor %}
-    
-        {% if Subscribers %}
+    {% endfor %}   
+</div>
+        {% if users_posts %}
         <form method = "POST">
             {% csrf_token %}
         <h1>Subscribers' Posts</h1>
         <hr>
     {% for post in users_posts %}
     {% if post.author != request.user %}
-    <div>
+    <div class = 'blog'>
         {% now "Y" as current_year %}
-        <h3>{{post.title}}</h3>
-        <h5>{{post.author}}</h5>
-        {% if post.created_at|date:"Y" == current_year %}
-            <p>{{ post.created_at|date:"M d" }}</p>
-        {% else %}
-            <p>{{ post.created_at|date:"M d, Y" }}</p>
-        {% endif %}
-        
+        <h2>{{post.title}} - {{post.author}}</h2>
         <p>{{post.post}}</p>
-        <button type = 'submit' name = 'user_post' value = '{{post.author}} {{post.title}}'>Delete?</button>
+        <hr>
+        {% if post.created_at|date:"Y" == current_year %}
+        <p>{{ post.created_at|date:"M d" }}</p>
+    {% else %}
+        <p>{{ post.created_at|date:"M d, Y" }}</p>
+    {% endif %}
+    <a href = {% url "delete" post.title%}>Delete</a>
         </div>
     {% endif %}
     {% endfor %}
@@ -50,12 +48,3 @@
  
     </form>
 {% endblock title %}
-
-{% comment %} <script>
-    document.querySelectorAll('.update_button').forEach(button => {
-        button.addEventListener('click', () => {
-            const post_title = button.getAttribute('data-title');
-            window.location.href = `{% url "update" %}?title=${post_title}`;
-        })
-    })
-</script> {% endcomment %}

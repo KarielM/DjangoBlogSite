@@ -42,15 +42,12 @@ class Create_Blog_Post_Form(forms.ModelForm):
             
         if user:
             youtubers_objects = YouTuber.objects.filter(subscription__subscriber=user)
-            youtubers = User.objects.filter(pk__in=[i.creator.pk for i in youtubers_objects])
-            # subscriptions = Subscription.objects.filter(subscriber=user)
-            # youtubers_objects = YouTuber.objects.filter(subscription__subscriber=user)
-            # print(youtubers)
-            # print(subscriptions)
-            # print (f' Youtubers: {youtubers}')
-            self.fields['content_creator'].queryset = youtubers
+            # print(youtubers_objects)
+            # youtubers = User.objects.filter(pk__in=[i.creator.pk for i in youtubers_objects])
+            # print(youtubers_objects)
+            self.fields['content_creator'].queryset = youtubers_objects
 
 class Update_Blog_Post_Form(forms.ModelForm):
     class Meta:
         model = Posts
-        fields = ['title', 'content_creator', 'post']
+        fields = ['title', 'post']

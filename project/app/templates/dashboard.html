@@ -8,7 +8,7 @@
 </div>
 <div class="main">
 {% block title %}
-<div class="centered">
+{% comment %} <div class="centered"> {% endcomment %}
     <h1>Dashboard</h1>
 
     <h1><a class="action-button" href="{% url 'create_blog_post' %}">Create Blog Post</a></h1>
@@ -21,7 +21,7 @@
         {% if blogs %}
         <div class="full-width-container">
             <h1>Latest Blogs:</h1>
-            <form method="post" class="form-content">
+            <form method="POST" class="form-content">
                 {% csrf_token %}
                 {% for blog in blogs %}
                     {% if blog.author.username != request.user.username %}
@@ -29,7 +29,7 @@
                             <h3>{{ blog.title }}</h3>
                             <p>{{ blog.author.username }}</p>
                             <p>{{ blog.post }}</p>
-                            <a class="action-button" href="{% url 'delete' blog.title %}">Delete</a>
+                            {% comment %} <a class="action-button" href="{% url 'delete' blog.title %}">Delete</a> {% endcomment %}
                         </div>
                     {% endif %}
                 {% endfor %}
@@ -37,7 +37,7 @@
         </div>
         {% endif %}
     {% endif %}
-</div>
+{% comment %} </div> {% endcomment %}
 {% endblock title %}
 </div>
 {% endblock content %}

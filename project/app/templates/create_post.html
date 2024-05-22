@@ -7,7 +7,7 @@
         {% csrf_token %}
         <div class="form-content">
             <p>{{ form.title }}</p>
-            {% comment %} <p>{{ form.content_creator }}</p> {% endcomment %}
+            <p>{{ form.content_creator }}</p>
             <p>{{ form.post }}</p>
             {% comment %} {{ form.as_p }} {% endcomment %}
             <button type="submit" class="action-button">Submit</button>

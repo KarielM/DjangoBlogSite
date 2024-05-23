@@ -169,7 +169,8 @@ html {
 }
 
 h1,
-h4 {
+h4,
+h3 {
     text-align: center;
 }
 
@@ -185,4 +186,21 @@ h4 {
 
 .form-container2 button {
     width: 80%;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+}
+
+.form-check input[type="checkbox"] {
+    margin-right: 10px;
+    width: 50px;
+    height: 18px;
+    margin-top: 3px;
+}
+
+.form-check label {
+    white-space: nowrap;
+    line-height: 18px;
 }

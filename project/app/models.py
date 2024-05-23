@@ -146,8 +146,10 @@ def update_certain_post(title, new_title, new_content, creator):
     except:
         pass
 ############################Delete Models########################
-def delete_post(title, user):
-    Posts.objects.get(title = title, author = user).delete()
+def delete_post(title, user, content_creator):
+    Posts.objects.get(title = title
+                      , author = user
+                      , content_creator = content_creator).delete()
 
 def delete_subscription(user, subscribed_to):
     Subscription.objects.get(subscriber = user, subscribed_to = subscribed_to).delete()

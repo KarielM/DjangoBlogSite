@@ -152,15 +152,19 @@ def update_certain_blog_view(request, title, author):
 def delete_post_view(request, title, author):
     # role = UserProfile.objects.get(user = request.user).role
     # post = Posts.objects.get(title = title, author = author, content_creator = YouTuber.objects.get(creator=request.user))
+    # print(request.user)
     if request.method == 'POST':
         if request.user.username != author:
             author = User.objects.get(username = author)
-            # print(author.email)
-            delete_post(title, author)
+            user = YouTuber.objects.get(creator = request.user)
+            
+            delete_post(title, author, user)
         else:
+            content_creator = Posts.objects.get(title = title, author = request.user).content_creator
+            # print(content_creator)
             # user = User.objects.get(username = request.user.username)
             # print(request.user.username)
-            delete_post(title, request.user)
+            delete_post(title, request.user, content_creator)
         return redirect('view_my_blogs')
 
     return render(request, 'delete_blog.html', {'title': title})

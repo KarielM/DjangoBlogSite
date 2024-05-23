@@ -2,9 +2,9 @@
 
 {% block content %}
 <div class="sidenav">
-    <h1>Hello, {{ request.user }}</h1>
-    <span><a href="{% url 'logout' %}">Logout</a></span>
-    <span><a href="{% url 'dashboard' %}">Home</a></span>
+    <div class="navbar-header">Hello, {{ request.user }}</div>
+    <a href="{% url 'logout' %}">Logout</a>
+    <a href="{% url 'dashboard' %}">Home</a>
 </div>
 <div class="main">
 {% block title %}
@@ -25,14 +25,18 @@
                 {% csrf_token %}
                 {% for blog in blogs %}
                     {% if blog.author.username != request.user.username %}
+
+                    {% now "Y" as current_year %}
                         <div class="blog">
+
                             <h3>{{ blog.title }} - {{ blog.author.username }}</h3>
+
                             <p>{{ blog.post }}</p>
-                            {% now "Y" as current_year %}
-                            {% if post.created_at|date:"Y" == current_year %}
+                                
+                            {% if blog.created_at|date:"Y" == current_year %}
                                 <p>{{ blog.created_at|date:"M d" }}</p>
                             {% else %}
-                                <p>{{ blog.created_at|date:"M d, Y" }}</p>
+                                <p>{{ blog.created_at|date:"M d, y" }}</p>
                             {% endif %}
                             {% comment %} <a class="action-button" href="{% url 'delete' blog.title %}">Delete</a> {% endcomment %}
                         </div>

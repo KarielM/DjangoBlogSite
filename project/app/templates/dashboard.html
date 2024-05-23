@@ -9,18 +9,20 @@
 <div class="main">
 {% block title %}
 {% comment %} <div class="centered"> {% endcomment %}
-    <h1>Dashboard</h1>
+    <div class = 'full-width-container'>
+        <h1>Dashboard</h1>
 
-    <h1><a class="action-button" href="{% url 'create_blog_post' %}">Create Blog Post</a></h1>
+        <a class="action-button" href="{% url 'create_blog_post' %}">Create Blog Post</a>
 
-    <h1><a class="action-button" href="{% url 'view_my_blogs' %}">Manage Blog Posts</a></h1>
+        <a class="action-button" href="{% url 'view_my_blogs' %}">Manage Blog Posts</a>
 
-    <h1><a class="action-button" href="{% url 'subscribe' %}">Manage Subscriptions</a></h1>
+        <a class="action-button" href="{% url 'subscribe' %}">Manage Subscriptions</a>
+    </div>
 
     {% if role.name == 'Admin' %}
         {% if blogs %}
         <div class="full-width-container">
-            <h1>Latest Blogs:</h1>
+            <h1>Latest Blogs</h1>
             <form method="POST" class="form-content">
                 {% csrf_token %}
                 {% for blog in blogs %}

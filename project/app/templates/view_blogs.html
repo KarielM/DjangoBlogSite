@@ -2,6 +2,7 @@
 
 {% block title %}
 <div>
+    <h1>My Blogs</h1>
     {% for post in posts %}
         <div class = 'blog'>
             {% now "Y" as current_year %}
@@ -26,8 +27,8 @@
         {% if users_posts %}
         <form method = "POST">
             {% csrf_token %}
-        <h1>Subscribers' Posts</h1>
-        <hr>
+        <h1>Subscribers' Blogs</h1>
+
     {% for post in users_posts %}
     {% if post.author != request.user %}
     <div class = 'blog'>

@@ -1,37 +1,41 @@
 {% extends "dashboard.html" %}
 
 {% block title %}
-<div class="form-container">
-    <h1>Current Creators:</h1>
-    <h4>Click to Subscribe</h4>
-    <form method="post">
-        {% csrf_token %}
-        {% for youtuber in youTubers %}
-            {% if request.user != youtuber %}
+<div class="full-width-container">
+    <div class = 'blog'>
+        <h1>Current Creators:</h1>
+        <h4>Click to Subscribe</h4>
+        <form method="post">
+            {% csrf_token %}
+            {% for youtuber in youTubers %}
+                {% if request.user != youtuber %}
+                    <p>
+                        <button class="action-button" type="submit" name="subscribe_username" value="{{ youtuber.username }}">
+                            Subscribe to {{ youtuber.username }}
+                        </button>
+                    </p>
+                {% endif %}
+            {% endfor %}
+        </form>
+    </div>
+    <div class = 'blog'>
+        <h1>Already Subscribed To:</h1>
+        <h4>Click to Unsubscribe</h4>
+        <form method="post">
+            {% csrf_token %}
+            {% for subscription in already_subscribed %}
                 <p>
-                    <button class="action-button" type="submit" name="subscribe_username" value="{{ youtuber.username }}">
-                        Subscribe to {{ youtuber.username }}
+                    <button class="action-button" type="submit" name="unsubscribe_username" value="{{ subscription.username }}">
+                        Unsubscribe from {{ subscription.username }}
                     </button>
                 </p>
-            {% endif %}
-        {% endfor %}
-    </form>
-
-    <h1>Already Subscribed To:</h1>
-    <h4>Click to Unsubscribe</h4>
-    <form method="post">
-        {% csrf_token %}
-        {% for subscription in already_subscribed %}
-            <p>
-                <button class="action-button" type="submit" name="unsubscribe_username" value="{{ subscription.username }}">
-                    Unsubscribe from {{ subscription.username }}
-                </button>
-            </p>
-        {% endfor %}
-    </form>
+            {% endfor %}
+        </form>
+    </div>
 
     {% if role == 'Admin' %}
         {% if subscribers %}
+        <div class = 'blog'>
             <form method="post">
                 {% csrf_token %}
                 <h1>Current Subscribers:</h1>
@@ -44,20 +48,24 @@
                     </p>
                 {% endfor %}
             </form>
+        </div>
         {% endif %}
 
         {% if blocked_users %}
-            <h1>Blocked Users:</h1>
-            <form method="post">
-                {% csrf_token %}
-                {% for user in blocked_users %}
-                    <p>
-                        <button class="action-button" type="submit" name="unblock" value="{{ user.subscriber.username }}">
-                            Unblock {{ user.subscriber.username }}
-                        </button>
-                    </p>
-                {% endfor %}
-            </form>
+            <div class = 'blog'>
+                <h1>Blocked Users:</h1>
+                <h4>Click to Unblock</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    {% for user in blocked_users %}
+                        <p>
+                            <button class="action-button" type="submit" name="unblock" value="{{ user.subscriber.username }}">
+                                Unblock {{ user.subscriber.username }}
+                            </button>
+                        </p>
+                    {% endfor %}
+                </form>
+            </div> 
         {% endif %}
     {% endif %}
 </div>

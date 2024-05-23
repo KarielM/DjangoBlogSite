@@ -168,6 +168,21 @@ html {
     text-align: center;
 }
 
-h1 {
+h1,
+h4 {
     text-align: center;
+}
+
+.form-container2 {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    margin-bottom: 1em;
+    box-sizing: border-box;
+}
+
+.form-container2 button {
+    width: 80%;
 }

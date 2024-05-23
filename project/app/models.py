@@ -60,7 +60,7 @@ class Blocked_Subscriber(models.Model):
 def create_posts(author, title, creator, post, created_at=None):
     created_at = datetime.now()
 
-    existing_post = Posts.objects.filter(title=title, content_creator=creator).exists()
+    existing_post = Posts.objects.filter(title=title, content_creator=creator, author = author).exists()
     if not existing_post:
         return Posts.objects.create(
             author=author,

@@ -83,27 +83,28 @@ def Dashboard_View(request:HttpRequest):
 
 @login_required(login_url='user_login')
 def create_blog_post_view(request):
-    form = Create_Blog_Post_Form(user = request.user)
+    form = Create_Blog_Post_Form(user=request.user)
 
     if request.method == 'POST':
-        form = Create_Blog_Post_Form(request.POST, user = request.user)
+        form = Create_Blog_Post_Form(request.POST, user=request.user)
         if form.is_valid():
-
-
             author = request.user
-            print(User.objects.get(username = request.user))
             title = form.cleaned_data['title']
             content_creator_username = form.cleaned_data['content_creator']
-            post = form.cleaned_data['post']  
+            post = form.cleaned_data['post']
 
-            create_posts(author, title, content_creator_username, post)
-            messages.success(request, 'Post successfully created')         
+            result = create_posts(author, title, content_creator_username, post)
 
-            return redirect('dashboard')
+            if isinstance(result, str):
+                messages.error(request, result)
+            else:
+                messages.success(request, 'Post successfully created')
+                return redirect('dashboard')
         else:
             print(form.errors)
 
     return render(request, 'create_post.html', {'form': form})
+
 
 
 @login_required(login_url='user_login')
@@ -129,7 +130,7 @@ def view_all_blogs(request):
 
 
 @login_required(login_url='user_login')
-def update_certain_blog_view(request, title):
+def update_certain_blog_view(request, title, author):
     post = Posts.objects.get(title = title)
     form = Update_Blog_Post_Form(instance=post)
 
@@ -148,13 +149,20 @@ def update_certain_blog_view(request, title):
     return render(request, 'update_blog.html', {'form': form})
 
 @login_required(login_url='user_login')
-def delete_post_view(request, title):
-    user = request.user
-    print(user)
-    if request.method == "POST":
-
-        delete_post(title, user)
+def delete_post_view(request, title, author):
+    # role = UserProfile.objects.get(user = request.user).role
+    # post = Posts.objects.get(title = title, author = author, content_creator = YouTuber.objects.get(creator=request.user))
+    if request.method == 'POST':
+        if request.user.username != author:
+            author = User.objects.get(username = author)
+            # print(author.email)
+            delete_post(title, author)
+        else:
+            # user = User.objects.get(username = request.user.username)
+            # print(request.user.username)
+            delete_post(title, request.user)
         return redirect('view_my_blogs')
+
     return render(request, 'delete_blog.html', {'title': title})
 
 @login_required(login_url='user_login')

@@ -58,15 +58,20 @@ class Blocked_Subscriber(models.Model):
 ############################Creation Models########################
 
 def create_posts(author, title, creator, post, created_at=None):
-    if created_at is None:
-        created_at = datetime.now()
-    Posts.objects.create(
-        author=author,
-        title=title,
-        content_creator=creator,
-        post=post,
-        created_at=created_at
-    )
+    created_at = datetime.now()
+
+    existing_post = Posts.objects.filter(title=title, content_creator=creator).exists()
+    if not existing_post:
+        return Posts.objects.create(
+            author=author,
+            title=title,
+            content_creator=creator,
+            post=post,
+            created_at=created_at
+        )
+        
+    else:
+        return "A post with the same title already exists."
     
 def create_userprofile(user, role):
     UserProfile.objects.create(user=user, role=role)

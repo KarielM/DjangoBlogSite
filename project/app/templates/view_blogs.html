@@ -16,9 +16,9 @@
             <p>{{ post.created_at|date:"M d, Y" }}</p>
         {% endif %}
         <p class = 'edit'>
-            <a href = {% url "update" post.title%}>Update</a>
-            <a href = {% url "delete" post.title%}>Delete</a>
-            <p>
+            <a href = {% url "update" post.title post.author%}>Update</a>
+            <a href = {% url "delete" post.title post.author%}>Delete</a>
+        <p>
         </div>
     </div>
     {% endfor %}   
@@ -40,7 +40,7 @@
     {% else %}
         <p>{{ post.created_at|date:"M d, Y" }}</p>
     {% endif %}
-    <a href = {% url "delete" post.title%}>Delete</a>
+    <a href = {% url "delete" post.title post.author%}>Delete</a>
         </div>
     {% endif %}
     {% endfor %}

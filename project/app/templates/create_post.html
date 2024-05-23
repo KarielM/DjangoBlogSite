@@ -14,7 +14,17 @@
             <button type="button" class="action-button" onclick="window.location.href='{% url 'dashboard' %}'">Cancel</button>
         </div>
     </form>
+    {% if messages %}
+            <div class="error-messages">
+                <ul>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+    {% endif %}
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         let titleField = document.getElementsByName('title')[0];

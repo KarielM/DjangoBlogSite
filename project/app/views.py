@@ -9,17 +9,6 @@ from django.contrib.auth import get_user_model
 from .forms import *
 from .models import *
 
-# Create your views here.
-# def Create_User_View(request:HttpRequest):
-#     form = Create_User_Form(request.POST)
-
-#     if form.is_valid():
-#         form.save()
-#     else:
-#         print(form.errors)
-
-#     return render (request, 'register_user.html', {'form':form})
-
 def Create_User_View(request: HttpRequest):
     if request.user.is_authenticated:
         return redirect('dashboard')
@@ -70,12 +59,13 @@ def Dashboard_View(request:HttpRequest):
         temp_post = filter_latest_post(user, youTuber)
         if temp_post is not None:
             posts.append(filter_latest_post(user, youTuber))
+    
+    posts = sorted(posts, key =lambda q: q.created_at, reverse=True)
+    print(posts)
     try:
         user = YouTuber.objects.get(creator = request.user)
         role = view_role(request.user)
         if role.name == 'Admin':
-            # blogs = view_all_posts_associated(user)
-            ##pull all the subscribers
             return render(request, 'dashboard.html', {'role':role, 'blogs':posts})
     except YouTuber.DoesNotExist:
         return render(request, 'dashboard.html')
@@ -110,8 +100,10 @@ def create_blog_post_view(request):
 @login_required(login_url='user_login')
 def view_all_blogs(request):
     posts = view_all_posts(request.user)
+    posts = sorted(posts, key =lambda q: q.created_at, reverse=True)
     try:
         users_posts = view_all_posts_associated(YouTuber.objects.get(creator__username = request.user))
+        users_posts = sorted(users_posts, key =lambda q: q.created_at, reverse=True)
     except:
         users_posts = []
 
@@ -133,18 +125,18 @@ def view_all_blogs(request):
 def update_certain_blog_view(request, title, author):
     post = Posts.objects.get(title = title)
     form = Update_Blog_Post_Form(instance=post)
+    
 
     if request.method == 'POST':
         form = Update_Blog_Post_Form(request.POST)
         
         if form.is_valid():
+            # print(posts)
 
-            user = request.user
-            new_title = form.cleaned_data['title'] if post.title != form.cleaned_data['title'] else post.title
+            new_title = form.cleaned_data['title'] if post.title != form.cleaned_data['title'] and new_title not in [i.title for i in Posts.objects.filter(author = request.user)]else post.title
             new_post = form.cleaned_data['post'] if post.post != form.cleaned_data['post'] else post.post
             update_certain_post(title, new_title, new_post, post.content_creator)
-
-            return redirect('dashboard')
+            return redirect('view_my_blogs')
 
     return render(request, 'update_blog.html', {'form': form})
 

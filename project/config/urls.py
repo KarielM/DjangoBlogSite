@@ -20,7 +20,7 @@ from app.views import *
 
 urlpatterns = [
     path('register', Create_User_View, name = 'registration_page'),
-    path('login', User_Login_View, name = 'user_login'),
+    path('', User_Login_View, name = 'user_login'),
     path('logout', User_Logout_View, name = 'logout'),
     path('create', create_blog_post_view, name = 'create_blog_post'),
     path('all_blogs', view_all_blogs, name = 'view_my_blogs'),

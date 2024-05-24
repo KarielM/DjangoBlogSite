@@ -112,9 +112,9 @@ def view_all_blogs(request):
             post = request.POST.get('user_post')
             user, title = post.split(" ", 1)
             user = User.objects.get(username = user)
-            youtuber = YouTuber.objects.get(creator = request.user)
+            youTuber = YouTuber.objects.get(creator = request.user)
 
-            blog = view_single_blog_reverse_lookup(user, title, youtuber)
+            blog = view_single_blog_reverse_lookup(user, title, youTuber)
             delete_post(blog.title, blog.author)
             
 
@@ -198,15 +198,15 @@ def subscribe_to_new_user_view(request):
             delete_subscription(request.user, youTuber)
         elif 'block' in request.POST:
             user = User.objects.get(username = request.POST.get('block'))
-            youtuber = YouTuber.objects.get(creator__username=request.user)
+            youTuber = YouTuber.objects.get(creator__username=request.user)
 
-            create_blocked_user(user, youtuber)
-            delete_subscription(user, youtuber)
+            create_blocked_user(user, youTuber)
+            delete_subscription(user, youTuber)
         elif 'unblock' in request.POST:
             user = User.objects.get(username = request.POST.get('unblock'))
-            youtuber = YouTuber.objects.get(creator__username = request.user)
+            youTuber = YouTuber.objects.get(creator__username = request.user)
 
-            delete_or_unblock_blocked_user(user, youtuber)
+            delete_or_unblock_blocked_user(user, youTuber)
 
         return redirect('subscribe')
     # return render(request, 'subscribe_new.html', {'youTubers':available_list})

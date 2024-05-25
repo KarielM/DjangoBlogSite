@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect
-from django.http.response import HttpResponse
 from django.http.request import HttpRequest
+from django.http.response import HttpResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import get_user_model
 from .forms import *
 from .models import *
 
@@ -46,21 +45,30 @@ def User_Login_View(request: HttpRequest):
 
 def User_Logout_View(request:HttpRequest):
     logout(request)
-    return redirect('user_login')
+    response = redirect('user_login')
+    response['Cache-Control'] = 'no-store'
+    return response
 
 @login_required(login_url='user_login')
 def Dashboard_View(request:HttpRequest):
-    subscribers = [user for user in find_all_subscribers(request.user)]
-    posts = []
-    for user in subscribers:
-        youTuber = user.subscribed_to
-        user = user.subscriber
-        temp_post = filter_latest_post(user, youTuber)
-        if temp_post is not None:
-            posts.append(filter_latest_post(user, youTuber))
-    
-    posts = sorted(posts, key =lambda q: q.created_at, reverse=True)
-    print(posts)
+    try:
+        subscribers = [user for user in find_all_subscribers(request.user)]
+        blocked = filter_blocked_users(YouTuber.objects.get(creator = request.user))
+        blocked = [i.subscriber for i in blocked]
+        subscribers = [i for i in subscribers if i.subscriber not in blocked]
+        print(blocked, subscribers)
+        posts = []
+        for user in subscribers:
+            youTuber = user.subscribed_to
+            user = user.subscriber
+            temp_post = filter_latest_post(user, youTuber)
+            if temp_post is not None:
+                posts.append(filter_latest_post(user, youTuber))
+        
+        posts = sorted(posts, key =lambda q: q.created_at, reverse=True)
+        # print(posts)
+    except:
+        pass
     try:
         user = YouTuber.objects.get(creator = request.user)
         role = view_role(request.user)
@@ -101,7 +109,11 @@ def view_all_blogs(request):
     posts = sorted(posts, key =lambda q: q.created_at, reverse=True)
     try:
         users_posts = view_all_posts_associated(YouTuber.objects.get(creator__username = request.user))
+        blocked = filter_blocked_users(YouTuber.objects.get(creator=request.user))
+        blocked = [i.subscriber for i in blocked]
+        users_posts = [i for i in users_posts if i.author not in blocked]
         users_posts = sorted(users_posts, key =lambda q: q.created_at, reverse=True)
+        
     except:
         users_posts = []
 

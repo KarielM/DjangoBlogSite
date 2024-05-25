@@ -1,5 +1,5 @@
 {% extends "dashboard.html" %}
-
+{% load static%}
 {% block title %}
     {% if posts %}
         <div>
@@ -27,6 +27,7 @@
             {% endfor %}   
         </div>
     {% endif %}
+
     {% comment "" %}Rendering All of subscribers blogs w/ user as the content_creator{% endcomment %}
     <div>
         {% if users_posts %}
@@ -52,5 +53,10 @@
                     {% endif %}
                 {% endfor %}
             </form>
+        {% endif %}
+        {% if not posts and not users_posts %}
+        <div class = 'form-content2'>
+            <img id = 'empty' src= "{% static 'images/nothinghere.png' %}" alt="Image description">
+        </div>
         {% endif %}
 {% endblock title %}

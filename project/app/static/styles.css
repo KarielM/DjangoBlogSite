@@ -1,8 +1,4 @@
-Sure,
-here's the CSS without comments:
-
-
-```css * {
+* {
     margin: 0;
     padding: 0;
     font-family: Garamond, serif;
@@ -224,4 +220,36 @@ h3 {
     list-style-type: none;
 }
 
-```
+#main-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.center-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.big-image {
+    max-width: 80%;
+    max-height: 80%;
+    display: block;
+}
+
+.form-content2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    margin: auto;
+}
+
+#empty {
+    max-width: 100%;
+    max-height: 100%;
+}

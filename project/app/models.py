@@ -19,12 +19,11 @@ class UserProfile(models.Model):
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user.username
+        return f'{self.user.username}: {self.role.name}'
 
 
 class YouTuber(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
-    # subscribers = models.ManyToManyField(User, related_name='subscribed_to')
 
     def __str__(self):
         return self.creator.username
@@ -47,12 +46,15 @@ class Subscription(models.Model):
     subscribed_to = models.ForeignKey(YouTuber, on_delete = models.CASCADE)
 
     def __str__(self):
-        return self.subscribed_to.creator.username
+        return f'{self.subscriber.username} subscribed to {self.subscribed_to.creator.username}'
 
 
 class Blocked_Subscriber(models.Model):
     subscriber = models.ForeignKey(User, on_delete = models.CASCADE)
     subscribed_to = models.ForeignKey(YouTuber, on_delete = models.CASCADE)
+
+    def __str__(self):
+        return f'{self.subscriber.username} blocked by {self.subscribed_to.creator.username}'
 
 
 ############################Creation Models########################
@@ -109,7 +111,7 @@ def view_all_youTubers():
 
 def view_latest_post(user, subscribed_to):
     try:
-        list = Posts.objects.filter(author = user
+        return Posts.objects.filter(author = user
                              ,content_creator = subscribed_to)
     except:
         pass
@@ -136,7 +138,15 @@ def update_certain_post(title, new_title, new_content, creator):
     try:
         post = Posts.objects.get(title=title
                                  , content_creator=creator)
-        if new_title.lower() in [i.title.lower() for i in view_all_posts(post.author)]:
+        # print(new_title)
+        # print(title)
+        
+        unacceptable_titles = [i.title.lower() for i in view_all_posts(post.author)]
+        print(unacceptable_titles)
+        current_title = title.lower()
+        print(current_title)
+
+        if new_title.lower() in unacceptable_titles and new_title.lower() != title.lower():
             return "A post with the same title already exists."
         else:
             if new_title:

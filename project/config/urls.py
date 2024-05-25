@@ -26,7 +26,7 @@ urlpatterns = [
     path('all_blogs', view_all_blogs, name = 'view_my_blogs'),
     path('dashboard', Dashboard_View, name = 'dashboard'),
     path('delete_post/<str:title>/<str:author>', delete_post_view, name = 'delete'),
-    path('update_post/<str:title>/<str:author>', update_certain_blog_view, name = 'update'),
+    path('update_post/<str:title>', update_certain_blog_view, name = 'update'),
     path('subscribe', subscribe_to_new_user_view, name = 'subscribe'),
     path('admin/', admin.site.urls),
 ]

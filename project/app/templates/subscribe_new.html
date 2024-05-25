@@ -68,5 +68,10 @@
             </div> 
         {% endif %}
     {% endif %}
+    <div id="messages">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
 </div>
 {% endblock title %}

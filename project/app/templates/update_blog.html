@@ -12,5 +12,10 @@
 <button type = 'submit'class="action-button"/>Submit</button>
 </form>
 <button class="action-button" type="button" onclick="window.location.href='{% url 'view_my_blogs' %}'">Cancel</button>
+<div id="messages">
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+</div>
 </div>
 {% endblock title %}

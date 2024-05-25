@@ -27,11 +27,11 @@
     <div class="d-flex justify-content-center links mt-4">
       Don't have an account? <a href="{% url 'registration_page' %}">Sign Up</a>
     </div>
-    {% comment %} <div id="messages" class="form-content">
+    <div id="messages">
       {% for message in messages %}
         <p>{{ message }}</p>
       {% endfor %}
-    </div> {% endcomment %}
+    </div>
   </div>
 </div>
 {% endblock content %}

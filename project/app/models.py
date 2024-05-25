@@ -31,7 +31,7 @@ class YouTuber(models.Model):
 
 class Posts(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200, default='required')
+    title = models.CharField(max_length=20, default='required')
     content_creator = models.ForeignKey(YouTuber, on_delete=models.CASCADE)
     post = models.TextField()
     created_at = models.DateTimeField()
@@ -60,8 +60,7 @@ class Blocked_Subscriber(models.Model):
 def create_posts(author, title, creator, post, created_at=None):
     created_at = datetime.now()
 
-    existing_post = Posts.objects.filter(title=title, content_creator=creator, author = author).exists()
-    if not existing_post:
+    if title.lower() not in [i.title.lower() for i in view_all_posts(author)]:
         return Posts.objects.create(
             author=author,
             title=title,
@@ -76,7 +75,7 @@ def create_posts(author, title, creator, post, created_at=None):
 def create_userprofile(user, role):
     UserProfile.objects.create(user=user, role=role)
 
-def create_YouTuber(user, subscribers = None):
+def create_YouTuber(user):
     return YouTuber.objects.create(user=user)
 
 
@@ -137,12 +136,14 @@ def update_certain_post(title, new_title, new_content, creator):
     try:
         post = Posts.objects.get(title=title
                                  , content_creator=creator)
-
-        if new_title:
-            post.title = new_title
-        if new_content:
-            post.post = new_content
-        post.save()   
+        if new_title.lower() in [i.title.lower() for i in view_all_posts(post.author)]:
+            return "A post with the same title already exists."
+        else:
+            if new_title:
+                post.title = new_title
+            if new_content:
+                post.post = new_content
+            post.save()   
     except:
         pass
 ############################Delete Models########################
@@ -154,8 +155,8 @@ def delete_post(title, user, content_creator):
 def delete_subscription(user, subscribed_to):
     Subscription.objects.get(subscriber = user, subscribed_to = subscribed_to).delete()
 
-def delete_or_unblock_blocked_user(user, youtuber):
-    Blocked_Subscriber.objects.get(subscriber = user, subscribed_to = youtuber).delete()
+def delete_or_unblock_blocked_user(user, youTuber):
+    Blocked_Subscriber.objects.get(subscriber = user, subscribed_to = youTuber).delete()
 ############################Filter Models########################
 def filter_by_title(title, user):
     Posts.objects.get(title =title, user = user)

@@ -14,6 +14,11 @@
             <button type="button" class="action-button" onclick="window.location.href='{% url 'dashboard' %}'">Cancel</button>
         </div>
     </form>
+    <div id="messages">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+      </div>
 </div>
 
 <script>

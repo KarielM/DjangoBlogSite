@@ -1,4 +1,8 @@
-* {
+Sure,
+here's the CSS without comments:
+
+
+```css * {
     margin: 0;
     padding: 0;
     font-family: Garamond, serif;
@@ -11,7 +15,7 @@
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #6B7A99;
+    background-color: #395a7f;
     overflow-x: hidden;
     padding-top: 60px;
     transition: 0.5s;
@@ -28,21 +32,21 @@
 }
 
 .sidenav a:hover {
-    background-color: #575f75;
+    background-color: #6e9fc1;
     color: white;
 }
 
 .sidenav .navbar-header {
     padding: 10px 15px;
     text-align: center;
-    background-color: #566279;
+    background-color: #6e9fc1;
     color: white;
     font-size: 20px;
     font-weight: bold;
 }
 
 html {
-    background-color: #f1f4f6;
+    background-color: #e9ecee;
 }
 
 .main {
@@ -72,7 +76,7 @@ html {
     max-width: 600px;
     margin: auto;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid #acacac;
     border-radius: 10px;
     background-color: #f9f9f9;
     margin-bottom: 2em;
@@ -95,12 +99,12 @@ html {
     padding: 10px;
     margin-top: 10px;
     box-sizing: border-box;
-    border: 1px solid #ccc;
+    border: 1px solid #acacac;
     border-radius: 5px;
 }
 
 .action-button {
-    background-color: #6B7A99;
+    background-color: #395a7f;
     color: white;
     padding: 10px 20px;
     text-align: center;
@@ -119,13 +123,13 @@ html {
 .action-button:hover {
     background-color: white;
     color: black;
-    border: 2px solid #6B7A99;
+    border: 2px solid #395a7f;
 }
 
 .full-width-container {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #acacac;
     border-radius: 10px;
     background-color: #f9f9f9;
     margin-bottom: 1em;
@@ -139,7 +143,7 @@ html {
 .blog a {
     float: right;
     text-decoration: none;
-    color: #566279;
+    color: #395a7f;
     margin-left: 10px;
 }
 
@@ -156,7 +160,7 @@ html {
     padding: 10px;
     margin-top: 10px;
     box-sizing: border-box;
-    border: 1px solid #ccc;
+    border: 1px solid #acacac;
     border-radius: 5px;
 }
 
@@ -177,7 +181,7 @@ h3 {
 .form-container2 {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #acacac;
     border-radius: 10px;
     background-color: #f9f9f9;
     margin-bottom: 1em;
@@ -204,3 +208,20 @@ h3 {
     white-space: nowrap;
     line-height: 18px;
 }
+
+#messages {
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #acacac;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    margin-bottom: 1em;
+    box-sizing: border-box;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#messages li {
+    list-style-type: none;
+}
+
+```

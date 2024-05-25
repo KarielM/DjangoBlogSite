@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http.response import HttpResponse
 from django.http.request import HttpRequest
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -88,7 +87,6 @@ def create_blog_post_view(request):
             if isinstance(result, str):
                 messages.error(request, result)
             else:
-                messages.success(request, 'Post successfully created')
                 return redirect('dashboard')
         else:
             print(form.errors)
@@ -122,7 +120,7 @@ def view_all_blogs(request):
 
 
 @login_required(login_url='user_login')
-def update_certain_blog_view(request, title, author):
+def update_certain_blog_view(request, title):
     post = Posts.objects.get(title = title)
     form = Update_Blog_Post_Form(instance=post)
     
@@ -131,31 +129,27 @@ def update_certain_blog_view(request, title, author):
         form = Update_Blog_Post_Form(request.POST)
         
         if form.is_valid():
-            # print(posts)
-
-            new_title = form.cleaned_data['title'] if post.title != form.cleaned_data['title'] and new_title not in [i.title for i in Posts.objects.filter(author = request.user)]else post.title
+            new_title = form.cleaned_data['title'] if post.title != form.cleaned_data['title'] else post.title
             new_post = form.cleaned_data['post'] if post.post != form.cleaned_data['post'] else post.post
-            update_certain_post(title, new_title, new_post, post.content_creator)
-            return redirect('view_my_blogs')
+            result = update_certain_post(title, new_title, new_post, post.content_creator)
+            if isinstance(result,str):
+                messages.error(request, result)
+            else:
+                return redirect('view_my_blogs')
+        else:
+            messages.info(request, form.errors)
 
     return render(request, 'update_blog.html', {'form': form})
 
 @login_required(login_url='user_login')
 def delete_post_view(request, title, author):
-    # role = UserProfile.objects.get(user = request.user).role
-    # post = Posts.objects.get(title = title, author = author, content_creator = YouTuber.objects.get(creator=request.user))
-    # print(request.user)
     if request.method == 'POST':
         if request.user.username != author:
             author = User.objects.get(username = author)
             user = YouTuber.objects.get(creator = request.user)
-            
             delete_post(title, author, user)
         else:
             content_creator = Posts.objects.get(title = title, author = request.user).content_creator
-            # print(content_creator)
-            # user = User.objects.get(username = request.user.username)
-            # print(request.user.username)
             delete_post(title, request.user, content_creator)
         return redirect('view_my_blogs')
 
@@ -165,14 +159,12 @@ def delete_post_view(request, title, author):
 def subscribe_to_new_user_view(request):
     users_who_blocked_user = [user.subscribed_to for user in view_all_blocked(User.objects.get(username = request.user))]
     users_who_blocked_user = [User.objects.get(username = user) for user in users_who_blocked_user]
-    # print(users_who_blocked_user)
     youTuber_list = [user.creator for user in view_all_youTubers() if user.creator != request.user and user.creator not in users_who_blocked_user]
-    # print(youTuber_list)
     already_subscribed = [user.subscribed_to.creator for user in filter_all_subscriptions(request.user)]
     available_list = [user for user in youTuber_list if user not in already_subscribed]
     subscribers = [user for user in find_all_subscribers(request.user)]
-    role = UserProfile.objects.get(user__username = request.user)
-    role = role.role.name
+    role_object = UserProfile.objects.get(user__username = request.user)
+    role = role_object.role.name
     try:
         blocked_users = filter_blocked_users(YouTuber.objects.get(creator__username = request.user))
     except:
@@ -180,21 +172,11 @@ def subscribe_to_new_user_view(request):
     if request.method == 'POST':
         if 'subscribe_username' in request.POST:
             creator = request.POST.get('subscribe_username')
-            print(youTuber_list)
             youTuber = YouTuber.objects.get(creator__username=creator)
-            # print(request.POST)
-            # print(creator)
-            # print(youTuber)
             create_Subscription(request.user, youTuber)
         elif 'unsubscribe_username' in request.POST:
-            print(request.POST)
             creator = request.POST.get('unsubscribe_username')
-            print(youTuber_list)
-            # print(already_subscribed)
-            # print(creator)
             youTuber = YouTuber.objects.get(creator__username = creator)
-            # print(youTuber)
-            print(request.user)
             delete_subscription(request.user, youTuber)
         elif 'block' in request.POST:
             user = User.objects.get(username = request.POST.get('block'))
@@ -209,5 +191,4 @@ def subscribe_to_new_user_view(request):
             delete_or_unblock_blocked_user(user, youTuber)
 
         return redirect('subscribe')
-    # return render(request, 'subscribe_new.html', {'youTubers':available_list})
     return render(request, 'subscribe_new.html', {'youTubers':available_list, 'already_subscribed':already_subscribed, 'subscribers':subscribers, 'blocked_users':blocked_users, 'role':role})

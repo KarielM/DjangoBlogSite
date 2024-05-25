@@ -1,53 +1,56 @@
 {% extends "dashboard.html" %}
 
 {% block title %}
-<div>
-    <h1>My Blogs</h1>
-    {% for post in posts %}
-        <div class = 'blog'>
-            {% now "Y" as current_year %}
-            <h2>{{post.title}}</h2>
-
-            <p>{{post.post}}</p>
-            <hr>
+    {% if posts %}
         <div>
-        {% if post.created_at|date:"Y" == current_year %}
-            <p>{{ post.created_at|date:"M d" }}</p>
-        {% else %}
-            <p>{{ post.created_at|date:"M d, Y" }}</p>
-        {% endif %}
-        <p class = 'edit'>
-            <a href = {% url "delete" post.title post.author%}>Delete</a>
-            <a href = {% url "update" post.title post.author%}>Update</a>
-        <p>
-        </div>
-    </div>
-    {% endfor %}   
-</div>
-        {% if users_posts %}
-        <form method = "POST">
-            {% csrf_token %}
-        <h1>Subscribers' Blogs</h1>
+            {% comment "" %}Rendering All of the User's blogs{% endcomment %}
+            <h1>My Blogs</h1>
+            {% for post in posts %}
+                <div class = 'blog'>
+                    {% now "Y" as current_year %}
+                    <h2>{{post.title}}</h2>
 
-    {% for post in users_posts %}
-    {% if post.author != request.user %}
-    <div class = 'blog'>
-        {% now "Y" as current_year %}
-        <h2>{{post.title}} - {{post.author}}</h2>
-        <p>{{post.post}}</p>
-        <hr>
-        {% if post.created_at|date:"Y" == current_year %}
-        <p>{{ post.created_at|date:"M d" }}</p>
-    {% else %}
-        <p>{{ post.created_at|date:"M d, Y" }}</p>
-    {% endif %}
-    <p class = 'edit'>
-        <a href = {% url "delete" post.title post.author%}>Delete</a>
-    </p>
+                    <p>{{post.post}}</p>
+                    <hr>
+                <div>
+                    {% if post.created_at|date:"Y" == current_year %}
+                        <p>{{ post.created_at|date:"M d" }}</p>
+                    {% else %}
+                        <p>{{ post.created_at|date:"M d, Y" }}</p>
+                    {% endif %}
+                    <p class = 'edit'>
+                        <a href = {% url "delete" post.title post.author%}>Delete</a>
+                        <a href = {% url "update" post.title%}>Update</a>
+                    <p>
+                </div>
+            </div>
+            {% endfor %}   
         </div>
     {% endif %}
-    {% endfor %}
+    {% comment "" %}Rendering All of subscribers blogs w/ user as the content_creator{% endcomment %}
+    <div>
+        {% if users_posts %}
+            <form method = "POST">
+                {% csrf_token %}
+                <h1>Subscribers' Blogs</h1>
+                {% for post in users_posts %}
+                    {% if post.author != request.user %}
+                        <div class = 'blog'>
+                            {% now "Y" as current_year %}
+                            <h2>{{post.title}} - {{post.author}}</h2>
+                            <p>{{post.post}}</p>
+                            <hr>
+                            {% if post.created_at|date:"Y" == current_year %}
+                                <p>{{ post.created_at|date:"M d" }}</p>
+                            {% else %}
+                                <p>{{ post.created_at|date:"M d, Y" }}</p>
+                            {% endif %}
+                            <p class = 'edit'>
+                                <a href = {% url "delete" post.title post.author%}>Delete</a>
+                            </p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </form>
         {% endif %}
- 
-    </form>
 {% endblock title %}
